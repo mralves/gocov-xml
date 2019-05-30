@@ -1,4 +1,4 @@
 *.json
 coverage.xml
-
+.idea/**
 gocov-xml

@@ -1,0 +1,11 @@
+github.com/axw/gocov v0.0.0-20170322000131-3a69a0d2a4ef h1:kh7Fi8sfEY7aCl42VEEvGv7lez2YCOmO120N1fASWGc=
+github.com/axw/gocov v0.0.0-20170322000131-3a69a0d2a4ef/go.mod h1:pc6XrbIn8RLeVSNzXCZKXNst+RTE5Ju/nySYl1Wc0B4=
+github.com/mralves/gocov v0.0.0-20190530131827-a9700763977a h1:sC0Q3thWcqYYOfDBKgB+VWtuCHi0EzCVmP2areEJ2ro=
+github.com/mralves/gocov v0.0.0-20190530131827-a9700763977a/go.mod h1:Ja0/YN7HQ9M3oSkR9QniJMUgIz3pbcLBm7DBr32ksSo=
+golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
+golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
+golang.org/x/sync v0.0.0-20190423024810-112230192c58/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
+golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+golang.org/x/tools v0.0.0-20190530043710-12d73424210d h1:VJAFR7r5fgzF8sENVEZnaxjfTCn8ZGaApHUJ1ahQwSc=
+golang.org/x/tools v0.0.0-20190530043710-12d73424210d/go.mod h1:/rFqwRUd4F7ZHNgwSSTFct+R/Kf4OFW1sUzUTQQTgfc=

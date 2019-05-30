@@ -1,11 +1,11 @@
-package main
+package gocovxml
 
 import (
 	"encoding/json"
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"go/token"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -73,42 +73,26 @@ type Line struct {
 	Hits   int64 `xml:"hits,attr"`
 }
 
-func main() {
-	sourcePathPtr := flag.String(
-		"source",
-		"",
-		"Absolute path to source. Defaults to current working directory.",
-	)
-
-	flag.Parse()
-
-	// Parse the commandline arguments.
-	var sourcePath string
-	var err error
-	if *sourcePathPtr != "" {
-		sourcePath = *sourcePathPtr
-		if !filepath.IsAbs(sourcePath) {
-			panic(fmt.Sprintf("Source path is a relative path: %s", sourcePath))
-		}
-	} else {
-		sourcePath, err = os.Getwd()
-		if err != nil {
-			panic(err)
-		}
+func Parse(sourcePath string) error {
+	err := ParseWithOutput(sourcePath, os.Stdout)
+	if err != nil {
+		return err
 	}
+	fmt.Println()
+	return nil
+}
 
+func ParseWithOutput(sourcePath string, output io.Writer) error {
 	sources := make([]string, 1)
 	sources[0] = sourcePath
 	var r struct{ Packages []gocov.Package }
 	var totalLines, totalHits int64
-	err = json.NewDecoder(os.Stdin).Decode(&r)
+	err := json.NewDecoder(os.Stdin).Decode(&r)
 	if err != nil {
-		panic(err)
+		return err
 	}
-
 	fset := token.NewFileSet()
 	tokenFiles := make(map[string]*token.File)
-
 	// convert packages
 	packages := make([]Package, len(r.Packages))
 	for i, gPackage := range r.Packages {
@@ -118,7 +102,7 @@ func main() {
 			// get the releative path by base path.
 			fpath, err := filepath.Rel(sourcePath, gFunction.File)
 			if err != nil {
-				panic(err)
+				return err
 			}
 			classes := files[fpath]
 			if classes == nil {
@@ -143,7 +127,7 @@ func main() {
 			if tokenFile == nil {
 				info, err := os.Stat(gFunction.File)
 				if err != nil {
-					panic(err)
+					return err
 				}
 				tokenFile = fset.AddFile(gFunction.File, fset.Base(), int(info.Size()))
 				setContent = true
@@ -192,18 +176,14 @@ func main() {
 		totalLines += p.LineCount
 		totalHits += p.LineHits
 	}
-
 	coverage := Coverage{Sources: sources, Packages: packages, Timestamp: time.Now().UnixNano() / int64(time.Millisecond), LinesCovered: float32(totalHits), LinesValid: int64(totalLines), LineRate: float32(totalHits) / float32(totalLines)}
-
-	fmt.Printf(xml.Header)
-	fmt.Printf("<!DOCTYPE coverage SYSTEM \"http://cobertura.sourceforge.net/xml/coverage-04.dtd\">\n")
-
-	encoder := xml.NewEncoder(os.Stdout)
+	fmt.Fprintf(output, xml.Header)
+	fmt.Fprintf(output, "<!DOCTYPE coverage SYSTEM \"http://cobertura.sourceforge.net/xml/coverage-04.dtd\">\n")
+	encoder := xml.NewEncoder(output)
 	encoder.Indent("", "\t")
 	err = encoder.Encode(coverage)
 	if err != nil {
-		panic(err)
+		return err
 	}
-
-	fmt.Println()
+	return nil
 }
