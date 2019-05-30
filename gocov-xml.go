@@ -74,7 +74,7 @@ type Line struct {
 }
 
 func Parse(sourcePath string) error {
-	err := ParseWithOutput(sourcePath, os.Stdout)
+	err := ParseWithOutput(os.Stdin, sourcePath, os.Stdout)
 	if err != nil {
 		return err
 	}
@@ -82,12 +82,12 @@ func Parse(sourcePath string) error {
 	return nil
 }
 
-func ParseWithOutput(sourcePath string, output io.Writer) error {
+func ParseWithOutput(input io.Reader, sourcePath string, output io.Writer) error {
 	sources := make([]string, 1)
 	sources[0] = sourcePath
 	var r struct{ Packages []gocov.Package }
 	var totalLines, totalHits int64
-	err := json.NewDecoder(os.Stdin).Decode(&r)
+	err := json.NewDecoder(input).Decode(&r)
 	if err != nil {
 		return err
 	}
